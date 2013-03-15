@@ -51,7 +51,7 @@ Object.prototype.cssfilter = function (inputmode, value) {
             }
             break;
         default:
-            filters[mode] = value;
+            filters[mode] = parseInt(value, 10);
             this.setAttribute('data-filter', JSON.stringify(filters));
             break;
 
