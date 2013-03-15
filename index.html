@@ -3,7 +3,7 @@
   <meta charset="utf-8">
   <title>cssfilter.js</title>
   <style>
-h1{position:relative;top:-50px;font-family:"Helvetica Neue";margin-bottom:-40px;}h2 a{position:relative;top:15px;font-family:"Helvetica Neue";text-decoration:none;text-align:center;width:100%;display:block;}#main{width:600px;margin:auto;padding:40px 20px;border-radius:25px;}.boxes{display:inline-block;position:relative;top:20px;left:0px;}.box{height:40px;position:relative;top:0px;left:0px;right:0px;text-align:center;padding-top:10px;}.smallBoxes{position:relative;top:0px;left:0px;height:38px;width:38px;margin:1px;float:left;border-radius:15px;}
+h1{position:relative;top:-50px;font-family:"Helvetica Neue";margin-bottom:-40px;}h2 a{position:relative;top:15px;font-family:"Helvetica Neue";text-decoration:none;text-align:center;width:100%;display:block;}#main{width:600px;margin:auto;padding:40px 20px;border-radius:25px;}.boxes{display:inline-block;position:relative;top:20px;left:0px;}.box{height:40px;position:relative;top:0px;left:0px;right:0px;text-align:center;padding-top:10px;}.smallBoxes{position:relative;top:0px;left:0px;height:38px;width:38px;margin:1px;float:left;border-radius:15px;}label{min-width:100px;display:inline-block;}ul{list-style-type:none;}input[type='range']{width:140px;}
   </style>
   <style id="style">
 
@@ -15,15 +15,20 @@ h1{position:relative;top:-50px;font-family:"Helvetica Neue";margin-bottom:-40px;
     <h1></h1>
     <img id="butterflyimg" src="./butterfly.png" style="-webkit-filter: blur(1px);top:5px;box-shadow: 0px 0px 0px 10px #000000; -webkit-box-shadow: 0px 0px 0px 10px #000000; ">
     <ul>
-      <li><a href="#" onclick="javascript:addRandomFilter(); return false;">add filter</a></li>
-      <li><a href="#" onclick="javascript:randBlur(); return false;">random blur</a></li>
-      <li><a href="#" onclick="javascript:randBright(); return false;">random brightness</a></li>
-      <li><a href="#" onclick="javascript:randHue(); return false;">random hue-rotate</a></li>
-      <li><a href="#" onclick="javascript:randSat(); return false;">random saturate</a></li>
-      <li><a href="#" onclick="javascript:resetFilter(); return false;">reset filter</a></li>
+      <li><label for="autorender">auto render</label> <input id="autorender" name="" type="checkbox"> <label for="delay"> with delay</label> <input id="delay" name="" checked="checked" type="checkbox"></li>
+      <li style="margin-bottom:20px"><label for="slider0">delay: </label><input id="slider0" min="0" max="100" value="20" name="delay" type="range"></li>
+      
+      <li><label for="slider1">blur: </label>         <input id="slider1" min="0" max="100" value="0"   onchange="updateFilter(this.name, this.value);" name="blur"     type="range"></li>
+      <li><label for="slider2">bright: </label>       <input id="slider2" min="0" max="100" value="0"   onchange="updateFilter(this.name, this.value);" name="bright"   type="range"></li>
+      <li><label for="slider3">contrast: </label>     <input id="slider3" min="0" max="100" value="100" onchange="updateFilter(this.name, this.value);" name="contrast" type="range"></li>
+      <li><label for="slider4">hue: </label>          <input id="slider4" min="0" max="100" value="0"   onchange="updateFilter(this.name, this.value);" name="hue"      type="range"></li>
+      <li><label for="slider5">saturate: </label>     <input id="slider5" min="0" max="100" value="100" onchange="updateFilter(this.name, this.value);" name="saturate" type="range"></li>
+      
+      <li style="margin-top:20px"><input value="render now" type="button" onclick="javascript:renderFilter(); return false;"> <input value="reset filter" type="button" onclick="javascript:resetFilter(); return false;"></li>
     </ul>
   </div>
   <script type="text/javascript">
+    var delay = 0;
     function random(min, max) {
       return Math.floor(Math.random() * (max - min + 1)) + min;
     }
@@ -32,20 +37,34 @@ h1{position:relative;top:-50px;font-family:"Helvetica Neue";margin-bottom:-40px;
       document.getElementById('butterflyimg').cssfilter('blur', random(0,15)).cssfilter('hue', random(0,360)).cssfilter('sat', random(90,110)).cssfilter('render');
     }
     
-    function randBlur() {
-      document.getElementById('butterflyimg').cssfilter('blur', random(0,25)).cssfilter('render');
+    function updateFilter(name, value) {
+      console.log(name+' : '+value);
+      document.getElementById('butterflyimg').cssfilter(name, value);
+      if(document.getElementById('autorender').checked === true) {
+        if(document.getElementById('delay').checked === true) {
+          delay = 10;
+          setTimeout(renderAfterDelay, document.getElementById('slider0').value);
+        } else {
+          document.getElementById('butterflyimg').cssfilter('render');
+        }
+      }
     }
     
-    function randBright() {
-      document.getElementById('butterflyimg').cssfilter('bright', random(0,100)).cssfilter('render');
+    function renderAfterDelay() {
+      if(delay === 0) {
+        return;
+      }
+      if(delay !== 1) {
+        --delay;
+        setTimeout(renderAfterDelay, document.getElementById('slider0').value);
+        return;
+      } else {
+        document.getElementById('butterflyimg').cssfilter('render');
+      }
     }
     
-    function randHue() {
-      document.getElementById('butterflyimg').cssfilter('hue', random(0,360)).cssfilter('render');
-    }
-    
-    function randSat() {
-      document.getElementById('butterflyimg').cssfilter('sat', random(0,100)).cssfilter('render');
+    function renderFilter() {
+      document.getElementById('butterflyimg').cssfilter('render');
     }
     
     function resetFilter() {
