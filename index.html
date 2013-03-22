@@ -55,11 +55,11 @@ body{font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;}h1{position:re
         if(document.getElementById('delay').checked === true) {
           //delay = 50;
           if(delay === 0) {
-            delay = document.getElementById('delayslider').value;
+            delay = parseInt(document.getElementById('delayslider').value, 10);
             setTimeout(renderAfterDelay, document.getElementById('timeoutslider').value);
           } else {
             if(delay < (document.getElementById('delayslider').value*4)) {
-              delay += (document.getElementById('delayslider').value/5);
+              delay += parseInt(document.getElementById('delayslider').value/5, 10);
             }
           }
           
@@ -80,7 +80,7 @@ body{font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;}h1{position:re
       }
       if(delay !== 1) {
         --delay;
-        setTimeout(renderAfterDelay, document.getElementById('timeoutslider').value);
+        setTimeout(renderAfterDelay, parseInt(document.getElementById('timeoutslider').value, 10));
         return;
       } else {
         --delay;
