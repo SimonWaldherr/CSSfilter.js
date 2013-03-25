@@ -1,4 +1,5 @@
-Object.prototype.cssfilter = function (inputmode, value) {
+var cssfilter = Object.prototype.cssfilter;
+cssfilter = function (inputmode, value) {
     "use strict";
     var browser = ['-webkit-filter', '-moz-filter', '-o-filter', 'filter'],
         filter  = ['blur', 'brightness', 'contrast', 'grayscale', 'hue-rotate', 'saturate', 'sepia', 'invert', 'opacity'],
